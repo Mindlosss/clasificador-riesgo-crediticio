@@ -1,0 +1,204 @@
+{
+  "dataset": "Credit Risk Dataset - Kaggle",
+  "source_url": "https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data",
+  "target_column": "loan_status",
+  "algorithm": "Random Forest Classifier",
+  "training_params": {
+    "train_percent": 80.0,
+    "test_percent": 20.0,
+    "n_estimators": 90,
+    "max_depth": 16,
+    "random_state": 123
+  },
+  "rows": 32416,
+  "columns": 12,
+  "train_rows": 25932,
+  "test_rows": 6484,
+  "accuracy": 0.93,
+  "precision": 0.9327,
+  "recall": 0.7327,
+  "f1": 0.8207,
+  "confusion_matrix": [
+    [
+      4991,
+      75
+    ],
+    [
+      379,
+      1039
+    ]
+  ],
+  "classification_report": {
+    "No default": {
+      "precision": 0.9294227188081937,
+      "recall": 0.9851954204500593,
+      "f1-score": 0.9564967420467612,
+      "support": 5066.0
+    },
+    "Default": {
+      "precision": 0.9326750448833034,
+      "recall": 0.732722143864598,
+      "f1-score": 0.8206951026856241,
+      "support": 1418.0
+    },
+    "accuracy": 0.9299814929056138,
+    "macro avg": {
+      "precision": 0.9310488818457485,
+      "recall": 0.8589587821573286,
+      "f1-score": 0.8885959223661926,
+      "support": 6484.0
+    },
+    "weighted avg": {
+      "precision": 0.9301339770399187,
+      "recall": 0.9299814929056138,
+      "f1-score": 0.9267979874795045,
+      "support": 6484.0
+    }
+  },
+  "class_names": {
+    "0": "Bajo riesgo: no incumple el pr\u00e9stamo",
+    "1": "Alto riesgo: posible incumplimiento"
+  },
+  "feature_columns": [
+    "person_age",
+    "person_income",
+    "person_home_ownership",
+    "person_emp_length",
+    "loan_intent",
+    "loan_grade",
+    "loan_amnt",
+    "loan_int_rate",
+    "loan_percent_income",
+    "cb_person_default_on_file",
+    "cb_person_cred_hist_length"
+  ],
+  "numeric_features": [
+    "person_age",
+    "person_income",
+    "person_emp_length",
+    "loan_amnt",
+    "loan_int_rate",
+    "loan_percent_income",
+    "cb_person_cred_hist_length"
+  ],
+  "categorical_features": [
+    "person_home_ownership",
+    "loan_intent",
+    "loan_grade",
+    "cb_person_default_on_file"
+  ],
+  "fields": [
+    {
+      "name": "person_age",
+      "label": "Edad",
+      "type": "number",
+      "min": 20.0,
+      "max": 144.0,
+      "median": 26.0
+    },
+    {
+      "name": "person_income",
+      "label": "Ingreso anual",
+      "type": "number",
+      "min": 4000.0,
+      "max": 6000000.0,
+      "median": 55000.0
+    },
+    {
+      "name": "person_home_ownership",
+      "label": "Tipo de vivienda",
+      "type": "category",
+      "options": [
+        "MORTGAGE",
+        "OTHER",
+        "OWN",
+        "RENT"
+      ],
+      "default": "MORTGAGE"
+    },
+    {
+      "name": "person_emp_length",
+      "label": "A\u00f1os de empleo",
+      "type": "number",
+      "min": 0.0,
+      "max": 123.0,
+      "median": 4.0
+    },
+    {
+      "name": "loan_intent",
+      "label": "Prop\u00f3sito del pr\u00e9stamo",
+      "type": "category",
+      "options": [
+        "DEBTCONSOLIDATION",
+        "EDUCATION",
+        "HOMEIMPROVEMENT",
+        "MEDICAL",
+        "PERSONAL",
+        "VENTURE"
+      ],
+      "default": "DEBTCONSOLIDATION"
+    },
+    {
+      "name": "loan_grade",
+      "label": "Grado del pr\u00e9stamo",
+      "type": "category",
+      "options": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "default": "A"
+    },
+    {
+      "name": "loan_amnt",
+      "label": "Monto del pr\u00e9stamo",
+      "type": "number",
+      "min": 500.0,
+      "max": 35000.0,
+      "median": 8000.0
+    },
+    {
+      "name": "loan_int_rate",
+      "label": "Tasa de inter\u00e9s",
+      "type": "number",
+      "min": 5.42,
+      "max": 23.22,
+      "median": 10.99
+    },
+    {
+      "name": "loan_percent_income",
+      "label": "Porcentaje ingreso/pr\u00e9stamo",
+      "type": "number",
+      "min": 0.0,
+      "max": 0.83,
+      "median": 0.15
+    },
+    {
+      "name": "cb_person_default_on_file",
+      "label": "Incumplimiento previo",
+      "type": "category",
+      "options": [
+        "N",
+        "Y"
+      ],
+      "default": "N"
+    },
+    {
+      "name": "cb_person_cred_hist_length",
+      "label": "A\u00f1os de historial crediticio",
+      "type": "number",
+      "min": 2.0,
+      "max": 30.0,
+      "median": 4.0
+    }
+  ],
+  "charts": {
+    "confusion_matrix": "assets/confusion_matrix.png",
+    "class_distribution": "assets/class_distribution.png",
+    "feature_importance": "assets/feature_importance.png"
+  }
+}

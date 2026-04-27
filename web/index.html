@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Clasificador de Riesgo Crediticio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="topbar">
+        <div>
+          <h1>Predicción de riesgo crediticio</h1>
+        </div>
+        <div class="score-card">
+          <span>Eficiencia</span>
+          <strong id="accuracy">--%</strong>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="Vistas principales">
+        <button class="tab-button active" type="button" data-view="training-view">
+          Entrenar modelo
+        </button>
+        <button class="tab-button" type="button" data-view="prediction-view">
+          Predicción
+        </button>
+      </nav>
+
+      <section id="training-view" class="view active">
+        <section class="training-grid">
+          <aside class="panel metrics-panel">
+            <div class="section-title stacked">
+              <div>
+                <p class="eyebrow">Entrenamiento</p>
+                <h2>Modelo y métricas</h2>
+              </div>
+            </div>
+            <dl class="metrics-list">
+              <div>
+                <dt>Algoritmo</dt>
+                <dd id="algorithm">--</dd>
+              </div>
+              <div>
+                <dt>Variable clase</dt>
+                <dd id="target">--</dd>
+              </div>
+              <div>
+                <dt>Registros</dt>
+                <dd id="rows">--</dd>
+              </div>
+              <div>
+                <dt>Datos entrenamiento</dt>
+                <dd id="train-rows">--</dd>
+              </div>
+              <div>
+                <dt>Datos prueba</dt>
+                <dd id="test-rows">--</dd>
+              </div>
+              <div>
+                <dt>División train/test</dt>
+                <dd id="split-info">--</dd>
+              </div>
+              <div>
+                <dt>Árboles</dt>
+                <dd id="trees-info">--</dd>
+              </div>
+              <div>
+                <dt>Profundidad max.</dt>
+                <dd id="depth-info">--</dd>
+              </div>
+              <div>
+                <dt>Semilla</dt>
+                <dd id="seed-info">--</dd>
+              </div>
+              <div>
+                <dt>Precisión</dt>
+                <dd id="precision">--</dd>
+              </div>
+              <div>
+                <dt>Recall</dt>
+                <dd id="recall">--</dd>
+              </div>
+              <div>
+                <dt>F1-score</dt>
+                <dd id="f1">--</dd>
+              </div>
+            </dl>
+            <p id="train-status" class="status-line">Modelo listo para usarse.</p>
+          </aside>
+
+          <section class="panel">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">Parámetros</p>
+                <h2>Configuración del entrenamiento</h2>
+              </div>
+              <button id="train-button" type="button">Entrenar modelo</button>
+            </div>
+            <form id="training-form" class="training-form">
+              <label>
+                Porcentaje para prueba
+                <input id="test-percent" name="test_percent" type="range" min="10" max="50" step="5" value="20" />
+                <span id="test-percent-label">20% prueba / 80% entrenamiento</span>
+              </label>
+              <label>
+                Número de árboles
+                <input name="n_estimators" type="number" min="20" max="500" step="10" value="120" />
+              </label>
+              <label>
+                Profundidad máxima
+                <select name="max_depth">
+                  <option value="0">Sin límite</option>
+                  <option value="4">4 niveles</option>
+                  <option value="6">6 niveles</option>
+                  <option value="8">8 niveles</option>
+                  <option value="12">12 niveles</option>
+                  <option value="16">16 niveles</option>
+                </select>
+              </label>
+              <label>
+                Semilla aleatoria
+                <input name="random_state" type="number" min="0" max="9999" step="1" value="42" />
+              </label>
+            </form>
+
+            <h2 class="subsection-title">Comprensión del algoritmo</h2>
+            <div class="explain compact">
+              <p>
+                Random Forest construye varios árboles de decisión con muestras del
+                dataset. Cada árbol evalúa reglas como ingreso, tasa de interés,
+                monto y antecedentes. La clase final se decide por votación.
+              </p>
+              <p>
+                La eficiencia se calcula separando el dataset en entrenamiento y
+                prueba. La matriz de confusión muestra aciertos y errores al
+                comparar predicciones contra clases reales.
+              </p>
+            </div>
+          </section>
+        </section>
+
+        <section class="charts">
+          <article class="chart-card">
+            <h2>Matriz de confusión</h2>
+            <img id="confusion-chart" alt="Matriz de confusión" />
+          </article>
+          <article class="chart-card">
+            <h2>Variables importantes</h2>
+            <img id="importance-chart" alt="Importancia de variables" />
+          </article>
+          <article class="chart-card">
+            <h2>Distribución de clases</h2>
+            <img id="distribution-chart" alt="Distribución de clases" />
+          </article>
+        </section>
+      </section>
+
+      <section id="prediction-view" class="view">
+        <section class="prediction-grid">
+          <section class="panel form-panel">
+            <div class="section-title">
+              <div>
+                <p class="eyebrow">Nuevo solicitante</p>
+                <h2>Captura de datos</h2>
+              </div>
+              <button id="predict-button" type="button">Predecir clase</button>
+            </div>
+            <form id="prediction-form" class="form-grid"></form>
+          </section>
+
+          <aside id="result" class="result-panel hidden">
+            <span id="result-label">Clase predicha</span>
+            <strong id="result-class">--</strong>
+            <p id="result-detail">--</p>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
