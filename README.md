@@ -37,12 +37,29 @@ El proyecto usa `RandomForestClassifier`. El algoritmo construye varios árboles
 
 ## Ejecutar
 
+Requisito recomendado en Windows: **Python 3.10, 3.11 o 3.12**. Evita Python 3.14 para esta app porque `pywebview` usa `pythonnet` y puede fallar al instalarse en esa versión.
+
+Forma rápida:
+
+```powershell
+.\iniciar_app.bat
+```
+
+Forma manual:
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 python train_model.py
 python app.py
+```
+
+Si ya se creó `.venv` con Python 3.14 y falló la instalación, borra esa carpeta y vuelve a ejecutar con Python 3.11:
+
+```powershell
+Remove-Item -Recurse -Force .venv
+.\iniciar_app.bat
 ```
 
 El primer entrenamiento descarga el CSV, entrena el modelo, genera `model/metrics.json` y guarda las gráficas en `web/assets`.
