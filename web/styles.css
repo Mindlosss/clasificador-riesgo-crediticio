@@ -1,13 +1,17 @@
 :root {
   --bg: #eef2f5;
+  --bg-soft: #f7fafb;
   --panel: #ffffff;
   --ink: #172026;
   --muted: #61717c;
   --line: #d8e0e6;
   --accent: #1b7f79;
   --accent-dark: #10615d;
+  --accent-soft: #e3f3f1;
   --danger: #b83245;
   --success: #237a3b;
+  --shadow: 0 18px 45px rgba(23, 32, 38, 0.09);
+  --shadow-soft: 0 10px 28px rgba(23, 32, 38, 0.06);
 }
 
 * {
@@ -22,9 +26,9 @@ body {
 }
 
 .app-shell {
-  width: min(1180px, calc(100% - 32px));
+  width: min(1360px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 24px 0 34px;
+  padding: 30px 0 40px;
 }
 
 .topbar {
@@ -32,7 +36,12 @@ body {
   justify-content: space-between;
   gap: 18px;
   align-items: center;
-  padding: 6px 0 18px;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  border: 1px solid rgba(216, 224, 230, 0.8);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: var(--shadow-soft);
 }
 
 .eyebrow {
@@ -55,11 +64,13 @@ h1 {
   margin-bottom: 0;
   font-size: 34px;
   line-height: 1.1;
+  font-weight: 850;
 }
 
 h2 {
   margin-bottom: 14px;
   font-size: 20px;
+  line-height: 1.2;
 }
 
 h3 {
@@ -71,7 +82,7 @@ h3 {
   display: grid;
   gap: 2px;
   min-width: 150px;
-  padding: 14px 18px;
+  padding: 16px 20px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
@@ -101,10 +112,11 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
+  box-shadow: var(--shadow-soft);
 }
 
 .panel {
-  padding: 18px;
+  padding: 20px;
 }
 
 .metrics-list {
@@ -117,7 +129,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   gap: 14px;
-  padding-bottom: 10px;
+  padding: 0 0 10px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -130,13 +142,15 @@ h3 {
   margin: 0;
   text-align: right;
   font-weight: 700;
+  color: #22313a;
 }
 
 .explain {
   margin-top: 18px;
-  padding: 14px;
+  padding: 16px;
   border-radius: 8px;
-  background: #f4f7f8;
+  background: var(--bg-soft);
+  border: 1px solid #e3eaee;
 }
 
 .explain p {
@@ -151,22 +165,33 @@ h3 {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.section-title h2 {
+  margin-bottom: 0;
 }
 
 button {
   min-height: 42px;
   border: 0;
   border-radius: 8px;
-  background: var(--accent);
+  background: linear-gradient(180deg, #22918a, var(--accent));
   color: white;
   padding: 0 18px;
   font-weight: 800;
   cursor: pointer;
+  box-shadow: 0 8px 18px rgba(27, 127, 121, 0.2);
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
 }
 
 button:hover {
-  background: var(--accent-dark);
+  background: linear-gradient(180deg, #1b7f79, var(--accent-dark));
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(27, 127, 121, 0.26);
 }
 
 button:disabled {
@@ -177,17 +202,22 @@ button:disabled {
 .tabs {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--shadow-soft);
 }
 
 .tab-button {
+  flex: 1;
   min-height: 44px;
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px;
   background: transparent;
   color: var(--muted);
   border: 1px solid transparent;
-  border-bottom: 0;
+  box-shadow: none;
 }
 
 .tab-button:hover,
@@ -195,6 +225,8 @@ button:disabled {
   background: var(--panel);
   color: var(--accent-dark);
   border-color: var(--line);
+  transform: none;
+  box-shadow: 0 8px 18px rgba(23, 32, 38, 0.06);
 }
 
 .view {
@@ -208,13 +240,32 @@ button:disabled {
 .training-grid,
 .prediction-grid {
   display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(340px, 400px) minmax(0, 1fr);
+  gap: 18px;
   align-items: start;
 }
 
+.metrics-panel {
+  position: sticky;
+  top: 22px;
+}
+
 .prediction-grid {
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+}
+
+#prediction-view .prediction-grid {
+  align-items: stretch;
+}
+
+.form-panel {
+  min-height: 420px;
+}
+
+#prediction-view .section-title {
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
 }
 
 .form-grid {
@@ -223,11 +274,15 @@ button:disabled {
   gap: 14px;
 }
 
+#prediction-form {
+  gap: 16px;
+}
+
 .training-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 18px;
+  gap: 16px;
+  margin-bottom: 20px;
 }
 
 .training-form label:first-child {
@@ -253,20 +308,52 @@ label {
   font-weight: 700;
 }
 
+#training-form label,
+#prediction-form label {
+  padding: 12px;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  background: var(--bg-soft);
+}
+
 input,
 select {
   width: 100%;
   min-height: 40px;
   border: 1px solid #c9d4dc;
   border-radius: 8px;
-  background: white;
+  background: #fbfdfd;
   color: var(--ink);
   padding: 0 10px;
   font: inherit;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+input:focus,
+select:focus {
+  outline: 0;
+  border-color: var(--accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(27, 127, 121, 0.14);
 }
 
 .result-panel {
-  padding: 16px 18px;
+  position: sticky;
+  top: 22px;
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  border-left: 5px solid var(--accent);
+}
+
+.result-panel.pending {
+  border-left-color: var(--line);
+  background: var(--panel);
 }
 
 .result-panel span {
@@ -279,12 +366,15 @@ select {
 .result-panel strong {
   display: block;
   margin: 4px 0 6px;
-  font-size: 24px;
+  font-size: 20px;
+  line-height: 1.12;
 }
 
 .result-panel p {
   margin: 0;
   color: #39464f;
+  font-size: 14px;
+  line-height: 1.55;
 }
 
 .result-panel.high-risk strong {
@@ -295,15 +385,27 @@ select {
   color: var(--success);
 }
 
+.result-panel.high-risk {
+  border-left-color: var(--danger);
+}
+
+.result-panel.low-risk {
+  border-left-color: var(--success);
+}
+
+.result-panel.pending strong {
+  color: var(--muted);
+}
+
 .hidden {
   display: none;
 }
 
 .charts {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
 }
 
 .stacked {
@@ -316,6 +418,9 @@ select {
   color: var(--accent-dark);
   font-size: 14px;
   font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--accent-soft);
 }
 
 .compact {
@@ -331,14 +436,59 @@ select {
 }
 
 .chart-card {
-  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
+  overflow: hidden;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.chart-card h2 {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
 }
 
 .chart-card img {
   display: block;
   width: 100%;
-  min-height: 240px;
+  height: clamp(260px, 24vw, 340px);
+  min-height: 0;
+  padding: 8px;
+  border: 1px solid #edf2f5;
+  border-radius: 8px;
+  background: #fbfdfd;
   object-fit: contain;
+}
+
+@media (min-width: 1280px) {
+  .training-grid,
+  .charts,
+  .prediction-grid {
+    gap: 20px;
+  }
+
+  .training-grid {
+    grid-template-columns: 380px minmax(0, 1fr);
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  #prediction-form {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .panel {
+    padding: 22px;
+  }
 }
 
 @media (max-width: 980px) {
@@ -357,6 +507,12 @@ select {
 
   .result-panel {
     grid-column: auto;
+    position: static;
+    min-height: auto;
+  }
+
+  .metrics-panel {
+    position: static;
   }
 
   .form-grid {

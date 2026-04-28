@@ -196,6 +196,24 @@ def save_charts(
     plt.savefig(WEB_ASSETS_DIR / "feature_importance.png", dpi=160)
     plt.close()
 
+    scores = {
+        "Accuracy": accuracy_score(y_test, y_pred),
+        "Precision": precision_score(y_test, y_pred, zero_division=0),
+        "Recall": recall_score(y_test, y_pred, zero_division=0),
+        "F1-score": f1_score(y_test, y_pred, zero_division=0),
+    }
+    plt.figure(figsize=(6, 4))
+    ax = sns.barplot(x=list(scores.keys()), y=list(scores.values()), color="#1b7f79")
+    ax.set_ylim(0, 1)
+    plt.title("Métricas del modelo")
+    plt.xlabel("")
+    plt.ylabel("Puntaje")
+    for index, value in enumerate(scores.values()):
+        ax.text(index, value + 0.02, f"{value * 100:.1f}%", ha="center", fontweight="bold")
+    plt.tight_layout()
+    plt.savefig(WEB_ASSETS_DIR / "model_metrics.png", dpi=160)
+    plt.close()
+
 
 def normalize_params(
     test_size: float = 0.2,
@@ -288,6 +306,7 @@ def train(
             "confusion_matrix": "assets/confusion_matrix.png",
             "class_distribution": "assets/class_distribution.png",
             "feature_importance": "assets/feature_importance.png",
+            "model_metrics": "assets/model_metrics.png",
         },
     }
 
