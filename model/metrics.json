@@ -199,6 +199,7 @@
   "charts": {
     "confusion_matrix": "assets/confusion_matrix.png",
     "class_distribution": "assets/class_distribution.png",
-    "feature_importance": "assets/feature_importance.png"
+    "feature_importance": "assets/feature_importance.png",
+    "model_metrics": "assets/model_metrics.png"
   }
 }

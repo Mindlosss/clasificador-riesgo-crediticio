@@ -72,6 +72,7 @@ function renderMetadata(data) {
   document.querySelector("#confusion-chart").src = data.charts.confusion_matrix + cacheBust;
   document.querySelector("#importance-chart").src = data.charts.feature_importance + cacheBust;
   document.querySelector("#distribution-chart").src = data.charts.class_distribution + cacheBust;
+  document.querySelector("#metrics-chart").src = data.charts.model_metrics + cacheBust;
 
   form.innerHTML = "";
   data.fields.forEach((field) => form.appendChild(buildField(field)));
@@ -116,8 +117,9 @@ async function predict() {
 
   try {
     const prediction = await window.pywebview.api.predict(collectValues());
-    result.classList.remove("hidden", "high-risk", "low-risk");
+    result.classList.remove("hidden", "pending", "high-risk", "low-risk");
     result.classList.add(prediction.class_id === 1 ? "high-risk" : "low-risk");
+    document.querySelector("#result-label").textContent = "Clase predicha";
     resultClass.textContent = prediction.class_name;
     resultDetail.textContent = `Confianza de la clase: ${prediction.confidence.toFixed(
       2
@@ -137,7 +139,11 @@ async function trainModel() {
   try {
     const response = await window.pywebview.api.train_model(params);
     renderMetadata(response.metrics);
-    result.classList.add("hidden");
+    result.classList.remove("hidden", "high-risk", "low-risk");
+    result.classList.add("pending");
+    document.querySelector("#result-label").textContent = "Resultado";
+    resultClass.textContent = "Pendiente";
+    resultDetail.textContent = "Sin predicción calculada.";
     trainStatus.textContent = response.message;
   } catch (error) {
     trainStatus.textContent = "No se pudo entrenar el modelo. Revisa la consola.";
