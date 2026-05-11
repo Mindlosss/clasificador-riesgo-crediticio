@@ -8,16 +8,32 @@
   </head>
   <body>
     <main class="app-shell">
+
+      <!-- ─── TOP BAR ─── -->
       <section class="topbar">
         <div>
           <h1>Predicción de riesgo crediticio</h1>
         </div>
-        <div class="score-card">
-          <span>Eficiencia</span>
-          <strong id="accuracy">--%</strong>
+        <div class="topbar-right">
+          <!-- Algorithm selector -->
+          <div class="algo-selector" role="group" aria-label="Seleccionar algoritmo">
+            <button class="algo-btn active" type="button" data-algo="rf">
+              <span class="algo-icon">🌲</span>
+              <span>Random Forest</span>
+            </button>
+            <button class="algo-btn" type="button" data-algo="knn">
+              <span class="algo-icon">🔵</span>
+              <span>KNN</span>
+            </button>
+          </div>
+          <div class="score-card">
+            <span>Eficiencia</span>
+            <strong id="accuracy">--%</strong>
+          </div>
         </div>
       </section>
 
+      <!-- ─── TABS ─── -->
       <nav class="tabs" aria-label="Vistas principales">
         <button class="tab-button active" type="button" data-view="training-view">
           Entrenar modelo
@@ -27,159 +43,277 @@
         </button>
       </nav>
 
+      <!-- ════════════════════════════════════════════════════════════════
+           TRAINING VIEW
+      ════════════════════════════════════════════════════════════════ -->
       <section id="training-view" class="view active">
-        <section class="training-grid">
-          <aside class="panel metrics-panel">
-            <div class="section-title stacked">
-              <div>
-                <p class="eyebrow">Entrenamiento</p>
-                <h2>Modelo y métricas</h2>
-              </div>
-            </div>
-            <dl class="metrics-list">
-              <div>
-                <dt>Algoritmo</dt>
-                <dd id="algorithm">--</dd>
-              </div>
-              <div>
-                <dt>Variable clase</dt>
-                <dd id="target">--</dd>
-              </div>
-              <div>
-                <dt>Registros</dt>
-                <dd id="rows">--</dd>
-              </div>
-              <div>
-                <dt>Datos entrenamiento</dt>
-                <dd id="train-rows">--</dd>
-              </div>
-              <div>
-                <dt>Datos prueba</dt>
-                <dd id="test-rows">--</dd>
-              </div>
-              <div>
-                <dt>División train/test</dt>
-                <dd id="split-info">--</dd>
-              </div>
-              <div>
-                <dt>Árboles</dt>
-                <dd id="trees-info">--</dd>
-              </div>
-              <div>
-                <dt>Profundidad max.</dt>
-                <dd id="depth-info">--</dd>
-              </div>
-              <div>
-                <dt>Semilla</dt>
-                <dd id="seed-info">--</dd>
-              </div>
-              <div>
-                <dt>Precisión</dt>
-                <dd id="precision">--</dd>
-              </div>
-              <div>
-                <dt>Recall</dt>
-                <dd id="recall">--</dd>
-              </div>
-              <div>
-                <dt>F1-score</dt>
-                <dd id="f1">--</dd>
-              </div>
-            </dl>
-            <p id="train-status" class="status-line">Modelo listo para usarse.</p>
-          </aside>
 
-          <section class="panel">
-            <div class="section-title">
-              <div>
-                <p class="eyebrow">Parámetros</p>
-                <h2>Configuración del entrenamiento</h2>
+        <!-- ── RF training panel ── -->
+        <section id="rf-training-section" class="algo-section active">
+          <section class="training-grid">
+            <aside class="panel metrics-panel">
+              <div class="section-title stacked">
+                <div>
+                  <p class="eyebrow">Random Forest · Entrenamiento</p>
+                  <h2>Modelo y métricas</h2>
+                </div>
               </div>
-              <button id="train-button" type="button">Entrenar modelo</button>
-            </div>
-            <form id="training-form" class="training-form">
-              <label>
-                Porcentaje para prueba
-                <input id="test-percent" name="test_percent" type="range" min="10" max="50" step="5" value="20" />
-                <span id="test-percent-label">20% prueba / 80% entrenamiento</span>
-              </label>
-              <label>
-                Número de árboles
-                <input name="n_estimators" type="number" min="20" max="500" step="10" value="120" />
-              </label>
-              <label>
-                Profundidad máxima
-                <select name="max_depth">
-                  <option value="0">Sin límite</option>
-                  <option value="4">4 niveles</option>
-                  <option value="6">6 niveles</option>
-                  <option value="8">8 niveles</option>
-                  <option value="12">12 niveles</option>
-                  <option value="16">16 niveles</option>
-                </select>
-              </label>
-              <label>
-                Semilla aleatoria
-                <input name="random_state" type="number" min="0" max="9999" step="1" value="42" />
-              </label>
-            </form>
+              <dl class="metrics-list">
+                <div><dt>Algoritmo</dt><dd id="rf-algorithm">--</dd></div>
+                <div><dt>Variable clase</dt><dd id="rf-target">--</dd></div>
+                <div><dt>Registros</dt><dd id="rf-rows">--</dd></div>
+                <div><dt>Datos entrenamiento</dt><dd id="rf-train-rows">--</dd></div>
+                <div><dt>Datos prueba</dt><dd id="rf-test-rows">--</dd></div>
+                <div><dt>División train/test</dt><dd id="rf-split-info">--</dd></div>
+                <div><dt>Árboles</dt><dd id="rf-trees-info">--</dd></div>
+                <div><dt>Profundidad max.</dt><dd id="rf-depth-info">--</dd></div>
+                <div><dt>Semilla</dt><dd id="rf-seed-info">--</dd></div>
+                <div><dt>Precisión</dt><dd id="rf-precision">--</dd></div>
+                <div><dt>Recall</dt><dd id="rf-recall">--</dd></div>
+                <div><dt>F1-score</dt><dd id="rf-f1">--</dd></div>
+              </dl>
+              <p id="rf-train-status" class="status-line">Modelo listo para usarse.</p>
+            </aside>
 
-            <h2 class="subsection-title">Comprensión del algoritmo</h2>
-            <div class="explain compact">
-              <p>
-                Random Forest construye varios árboles de decisión con muestras del
-                dataset. Cada árbol evalúa reglas como ingreso, tasa de interés,
-                monto y antecedentes. La clase final se decide por votación.
-              </p>
-              <p>
-                La eficiencia se calcula separando el dataset en entrenamiento y
-                prueba. La matriz de confusión muestra aciertos y errores al
-                comparar predicciones contra clases reales.
-              </p>
-            </div>
+            <section class="panel">
+              <div class="section-title">
+                <div>
+                  <p class="eyebrow">Parámetros</p>
+                  <h2>Configuración del entrenamiento</h2>
+                </div>
+                <button id="rf-train-button" type="button">Entrenar modelo</button>
+              </div>
+              <form id="rf-training-form" class="training-form">
+                <label>
+                  Porcentaje para prueba
+                  <input id="rf-test-percent" name="test_percent" type="range" min="10" max="50" step="5" value="20" />
+                  <span id="rf-test-percent-label">20% prueba / 80% entrenamiento</span>
+                </label>
+                <label>
+                  Número de árboles
+                  <input name="n_estimators" type="number" min="20" max="500" step="10" value="120" />
+                </label>
+                <label>
+                  Profundidad máxima
+                  <select name="max_depth">
+                    <option value="0">Sin límite</option>
+                    <option value="4">4 niveles</option>
+                    <option value="6">6 niveles</option>
+                    <option value="8">8 niveles</option>
+                    <option value="12">12 niveles</option>
+                    <option value="16">16 niveles</option>
+                  </select>
+                </label>
+                <label>
+                  Semilla aleatoria
+                  <input name="random_state" type="number" min="0" max="9999" step="1" value="42" />
+                </label>
+              </form>
+
+              <h2 class="subsection-title">Comprensión del algoritmo</h2>
+              <div class="explain compact">
+                <p>
+                  Random Forest construye varios árboles de decisión con muestras del
+                  dataset. Cada árbol evalúa reglas como ingreso, tasa de interés,
+                  monto y antecedentes. La clase final se decide por votación.
+                </p>
+                <p>
+                  La eficiencia se calcula separando el dataset en entrenamiento y
+                  prueba. La matriz de confusión muestra aciertos y errores al
+                  comparar predicciones contra clases reales.
+                </p>
+              </div>
+            </section>
+          </section>
+
+          <section class="charts">
+            <article class="chart-card">
+              <h2>Matriz de confusión</h2>
+              <img id="rf-confusion-chart" alt="Matriz de confusión" />
+            </article>
+            <article class="chart-card">
+              <h2>Variables importantes</h2>
+              <img id="rf-importance-chart" alt="Importancia de variables" />
+            </article>
+            <article class="chart-card">
+              <h2>Distribución de clases</h2>
+              <img id="rf-distribution-chart" alt="Distribución de clases" />
+            </article>
+            <article class="chart-card">
+              <h2>Métricas del modelo</h2>
+              <img id="rf-metrics-chart" alt="Métricas del modelo" />
+            </article>
           </section>
         </section>
 
-        <section class="charts">
-          <article class="chart-card">
-            <h2>Matriz de confusión</h2>
-            <img id="confusion-chart" alt="Matriz de confusión" />
-          </article>
-          <article class="chart-card">
-            <h2>Variables importantes</h2>
-            <img id="importance-chart" alt="Importancia de variables" />
-          </article>
-          <article class="chart-card">
-            <h2>Distribución de clases</h2>
-            <img id="distribution-chart" alt="Distribución de clases" />
-          </article>
-          <article class="chart-card">
-            <h2>Métricas del modelo</h2>
-            <img id="metrics-chart" alt="Métricas del modelo" />
-          </article>
-        </section>
-      </section>
+        <!-- ── KNN training panel ── -->
+        <section id="knn-training-section" class="algo-section">
+          <section class="training-grid">
+            <aside class="panel metrics-panel">
+              <div class="section-title stacked">
+                <div>
+                  <p class="eyebrow">KNN · Entrenamiento</p>
+                  <h2>Modelo y métricas</h2>
+                </div>
+              </div>
+              <dl class="metrics-list">
+                <div><dt>Algoritmo</dt><dd id="knn-algorithm">--</dd></div>
+                <div><dt>Variable clase</dt><dd id="knn-target">--</dd></div>
+                <div><dt>Registros</dt><dd id="knn-rows">--</dd></div>
+                <div><dt>Datos entrenamiento</dt><dd id="knn-train-rows">--</dd></div>
+                <div><dt>Datos prueba</dt><dd id="knn-test-rows">--</dd></div>
+                <div><dt>División train/test</dt><dd id="knn-split-info">--</dd></div>
+                <div><dt>Vecinos (k)</dt><dd id="knn-neighbors-info">--</dd></div>
+                <div><dt>Métrica</dt><dd id="knn-metric-info">--</dd></div>
+                <div><dt>Pesos</dt><dd id="knn-weights-info">--</dd></div>
+                <div><dt>Búsqueda</dt><dd id="knn-algo-info">--</dd></div>
+                <div><dt>Semilla (split)</dt><dd id="knn-seed-info">--</dd></div>
+                <div><dt>Precisión</dt><dd id="knn-precision">--</dd></div>
+                <div><dt>Recall</dt><dd id="knn-recall">--</dd></div>
+                <div><dt>F1-score</dt><dd id="knn-f1">--</dd></div>
+              </dl>
+              <p id="knn-train-status" class="status-line">Cargando modelo KNN…</p>
+            </aside>
 
+            <section class="panel">
+              <div class="section-title">
+                <div>
+                  <p class="eyebrow">Parámetros</p>
+                  <h2>Configuración del entrenamiento</h2>
+                </div>
+                <button id="knn-train-button" type="button">Entrenar modelo</button>
+              </div>
+              <form id="knn-training-form" class="training-form">
+                <label>
+                  Porcentaje para prueba
+                  <input id="knn-test-percent" name="test_percent" type="range" min="10" max="50" step="5" value="20" />
+                  <span id="knn-test-percent-label">20% prueba / 80% entrenamiento</span>
+                </label>
+                <label>
+                  Número de vecinos (k)
+                  <input name="n_neighbors" type="number" min="1" max="50" step="1" value="7" />
+                </label>
+                <label>
+                  Métrica de distancia
+                  <select name="metric">
+                    <option value="minkowski">Minkowski</option>
+                    <option value="euclidean">Euclidiana</option>
+                    <option value="manhattan">Manhattan</option>
+                    <option value="chebyshev">Chebyshev</option>
+                  </select>
+                </label>
+                <label>
+                  Ponderación de vecinos
+                  <select name="weights">
+                    <option value="uniform">Uniforme</option>
+                    <option value="distance">Por distancia</option>
+                  </select>
+                </label>
+                <label>
+                  Algoritmo de búsqueda
+                  <select name="algorithm">
+                    <option value="auto">Automático</option>
+                    <option value="ball_tree">Ball Tree</option>
+                    <option value="kd_tree">KD Tree</option>
+                    <option value="brute">Fuerza bruta</option>
+                  </select>
+                </label>
+                <label>
+                  Semilla aleatoria (split)
+                  <input name="random_state" type="number" min="0" max="9999" step="1" value="42" />
+                </label>
+              </form>
+
+              <h2 class="subsection-title">Comprensión del algoritmo</h2>
+              <div class="explain compact">
+                <p>
+                  K-Nearest Neighbors clasifica un nuevo solicitante encontrando los
+                  <em>k</em> registros más similares en el dataset de entrenamiento.
+                  La clase se asigna por mayoría de votos entre esos vecinos.
+                </p>
+                <p>
+                  La distancia mide la "similitud" entre solicitantes. Minkowski
+                  generaliza Euclidiana y Manhattan. Los pesos por distancia dan más
+                  importancia a los vecinos más cercanos. KNN requiere normalización
+                  de variables numéricas para evitar sesgos por escala.
+                </p>
+              </div>
+            </section>
+          </section>
+
+          <section class="charts">
+            <article class="chart-card">
+              <h2>Matriz de confusión</h2>
+              <img id="knn-confusion-chart" alt="Matriz de confusión KNN" />
+            </article>
+            <article class="chart-card">
+              <h2>Métricas por clase</h2>
+              <img id="knn-importance-chart" alt="Métricas por clase KNN" />
+            </article>
+            <article class="chart-card">
+              <h2>Distribución de clases</h2>
+              <img id="knn-distribution-chart" alt="Distribución de clases" />
+            </article>
+            <article class="chart-card">
+              <h2>Métricas del modelo</h2>
+              <img id="knn-metrics-chart" alt="Métricas del modelo KNN" />
+            </article>
+          </section>
+        </section>
+
+      </section>
+      <!-- /training-view -->
+
+      <!-- ════════════════════════════════════════════════════════════════
+           PREDICTION VIEW
+      ════════════════════════════════════════════════════════════════ -->
       <section id="prediction-view" class="view">
-        <section class="prediction-grid">
-          <section class="panel form-panel">
-            <div class="section-title">
-              <div>
-                <p class="eyebrow">Nuevo solicitante</p>
-                <h2>Captura de datos</h2>
-              </div>
-              <button id="predict-button" type="button">Predecir clase</button>
-            </div>
-            <form id="prediction-form" class="form-grid"></form>
-          </section>
 
-          <aside id="result" class="result-panel pending">
-            <span id="result-label">Resultado</span>
-            <strong id="result-class">Pendiente</strong>
-            <p id="result-detail">Sin predicción calculada.</p>
-          </aside>
+        <!-- RF prediction -->
+        <section id="rf-prediction-section" class="algo-section active">
+          <section class="prediction-grid">
+            <section class="panel form-panel">
+              <div class="section-title">
+                <div>
+                  <p class="eyebrow">Random Forest · Nuevo solicitante</p>
+                  <h2>Captura de datos</h2>
+                </div>
+                <button id="rf-predict-button" type="button">Predecir clase</button>
+              </div>
+              <form id="rf-prediction-form" class="form-grid"></form>
+            </section>
+            <aside id="rf-result" class="result-panel pending">
+              <span id="rf-result-label">Resultado</span>
+              <strong id="rf-result-class">Pendiente</strong>
+              <p id="rf-result-detail">Sin predicción calculada.</p>
+            </aside>
+          </section>
         </section>
+
+        <!-- KNN prediction -->
+        <section id="knn-prediction-section" class="algo-section">
+          <section class="prediction-grid">
+            <section class="panel form-panel">
+              <div class="section-title">
+                <div>
+                  <p class="eyebrow">KNN · Nuevo solicitante</p>
+                  <h2>Captura de datos</h2>
+                </div>
+                <button id="knn-predict-button" type="button">Predecir clase</button>
+              </div>
+              <form id="knn-prediction-form" class="form-grid"></form>
+            </section>
+            <aside id="knn-result" class="result-panel pending">
+              <span id="knn-result-label">Resultado</span>
+              <strong id="knn-result-class">Pendiente</strong>
+              <p id="knn-result-detail">Sin predicción calculada.</p>
+            </aside>
+          </section>
+        </section>
+
       </section>
+      <!-- /prediction-view -->
+
     </main>
 
     <script src="script.js"></script>
