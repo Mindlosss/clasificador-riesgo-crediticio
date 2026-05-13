@@ -28,6 +28,12 @@ const knnTestPercentLabel = document.querySelector("#knn-test-percent-label");
 const knnPredictionForm = document.querySelector("#knn-prediction-form");
 const knnResult = document.querySelector("#knn-result");
 
+// Chart modal
+const chartModal = document.querySelector("#chart-modal");
+const chartModalImage = document.querySelector("#chart-modal-image");
+const chartModalTitle = document.querySelector("#chart-modal-title");
+const chartModalClose = document.querySelector("#chart-modal-close");
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function percent(value) {
   return `${(Number(value) * 100).toFixed(2)}%`;
@@ -50,6 +56,11 @@ function buildField(field) {
     input.value = Number(field.median).toFixed(2);
     input.min = field.min;
     input.max = field.max;
+    if (field.name === "loan_percent_income") {
+      input.readOnly = true;
+      input.dataset.calculated = "true";
+      input.title = "Se calcula automáticamente con monto del préstamo / ingreso anual.";
+    }
     wrapper.appendChild(input);
     return wrapper;
   }
@@ -68,11 +79,37 @@ function buildField(field) {
 }
 
 function collectFormValues(form) {
+  syncLoanPercentIncome(form);
   const values = {};
   new FormData(form).forEach((value, key) => {
     values[key] = value;
   });
   return values;
+}
+
+function syncLoanPercentIncome(form) {
+  const incomeInput = form.elements.person_income;
+  const loanAmountInput = form.elements.loan_amnt;
+  const percentInput = form.elements.loan_percent_income;
+  if (!incomeInput || !loanAmountInput || !percentInput) return;
+
+  const income = Number(incomeInput.value);
+  const loanAmount = Number(loanAmountInput.value);
+  if (!Number.isFinite(income) || !Number.isFinite(loanAmount) || income <= 0) return;
+
+  percentInput.value = (loanAmount / income).toFixed(4);
+}
+
+function enableCalculatedLoanPercent(form) {
+  const incomeInput = form.elements.person_income;
+  const loanAmountInput = form.elements.loan_amnt;
+  const percentInput = form.elements.loan_percent_income;
+  if (!incomeInput || !loanAmountInput || !percentInput) return;
+
+  const update = () => syncLoanPercentIncome(form);
+  incomeInput.addEventListener("input", update);
+  loanAmountInput.addEventListener("input", update);
+  syncLoanPercentIncome(form);
 }
 
 function collectNumberFormValues(form) {
@@ -101,14 +138,31 @@ function resetResult(resultEl) {
   resultEl.querySelector("[id$=result-detail]").textContent = "Sin predicción calculada.";
 }
 
+function openChartModal(image) {
+  if (!image.src) return;
+  const title = image.closest(".chart-card")?.querySelector("h2")?.textContent || image.alt || "Gráfica";
+  chartModalTitle.textContent = title;
+  chartModalImage.src = image.src;
+  chartModalImage.alt = image.alt || title;
+  chartModal.classList.remove("hidden");
+  chartModalClose.focus();
+}
+
+function closeChartModal() {
+  chartModal.classList.add("hidden");
+  chartModalImage.removeAttribute("src");
+}
+
 // ─── RF metadata ─────────────────────────────────────────────────────────────
 function renderRfMetadata(data) {
   rfMetadata = data;
   const tp = data.training_params || {};
+  const cleaning = data.cleaning || {};
   setText("#accuracy", currentAlgo === "rf" ? percent(data.accuracy) : document.querySelector("#accuracy").textContent);
   setText("#rf-algorithm", data.algorithm);
   setText("#rf-target", data.target_column);
   setText("#rf-rows", data.rows.toLocaleString("es-MX"));
+  setText("#rf-removed-rows", (cleaning.removed_rows || 0).toLocaleString("es-MX"));
   setText("#rf-train-rows", data.train_rows.toLocaleString("es-MX"));
   setText("#rf-test-rows", data.test_rows.toLocaleString("es-MX"));
   setText("#rf-split-info", `${tp.train_percent || 80}% / ${tp.test_percent || 20}%`);
@@ -127,6 +181,7 @@ function renderRfMetadata(data) {
 
   rfPredictionForm.innerHTML = "";
   data.fields.forEach((field) => rfPredictionForm.appendChild(buildField(field)));
+  enableCalculatedLoanPercent(rfPredictionForm);
 
   if (tp.test_percent) {
     rfTestPercentInput.value = tp.test_percent;
@@ -146,9 +201,11 @@ function renderRfMetadata(data) {
 function renderKnnMetadata(data) {
   knnMetadata = data;
   const tp = data.training_params || {};
+  const cleaning = data.cleaning || {};
   setText("#knn-algorithm", data.algorithm);
   setText("#knn-target", data.target_column);
   setText("#knn-rows", data.rows.toLocaleString("es-MX"));
+  setText("#knn-removed-rows", (cleaning.removed_rows || 0).toLocaleString("es-MX"));
   setText("#knn-train-rows", data.train_rows.toLocaleString("es-MX"));
   setText("#knn-test-rows", data.test_rows.toLocaleString("es-MX"));
   setText("#knn-split-info", `${tp.train_percent || 80}% / ${tp.test_percent || 20}%`);
@@ -169,6 +226,7 @@ function renderKnnMetadata(data) {
 
   knnPredictionForm.innerHTML = "";
   data.fields.forEach((field) => knnPredictionForm.appendChild(buildField(field)));
+  enableCalculatedLoanPercent(knnPredictionForm);
 
   const knnForm = document.querySelector("#knn-training-form");
   if (tp.n_neighbors) knnForm.elements.n_neighbors.value = tp.n_neighbors;
@@ -334,3 +392,14 @@ rfTestPercentInput.addEventListener("input", updateRfSplitLabel);
 knnTrainBtn.addEventListener("click", trainKnn);
 knnPredictBtn.addEventListener("click", predictKnn);
 knnTestPercentInput.addEventListener("input", updateKnnSplitLabel);
+
+document.querySelectorAll(".chart-card img").forEach((image) => {
+  image.addEventListener("click", () => openChartModal(image));
+});
+chartModalClose.addEventListener("click", closeChartModal);
+document.querySelector("[data-close-chart-modal]").addEventListener("click", closeChartModal);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !chartModal.classList.contains("hidden")) {
+    closeChartModal();
+  }
+});

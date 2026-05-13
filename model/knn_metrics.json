@@ -3,6 +3,21 @@
   "source_url": "https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data",
   "target_column": "loan_status",
   "algorithm": "K-Nearest Neighbors Classifier",
+  "cleaning": {
+    "original_rows": 32581,
+    "clean_rows": 32401,
+    "removed_rows": 180,
+    "clean_dataset_path": "data\\credit_risk_dataset_clean.csv",
+    "rules": [
+      "Edad entre 20 y 100 a\u00f1os",
+      "Ingreso anual entre 4,000 y 1,000,000",
+      "A\u00f1os de empleo entre 0 y 60, permitiendo valores faltantes",
+      "Monto del pr\u00e9stamo entre 500 y 35,000",
+      "Tasa de inter\u00e9s entre 1% y 40%, permitiendo valores faltantes",
+      "Historial crediticio entre 0 y 60 a\u00f1os",
+      "loan_percent_income recalculado como loan_amnt / person_income"
+    ]
+  },
   "training_params": {
     "train_percent": 80.0,
     "test_percent": 20.0,
@@ -12,49 +27,49 @@
     "algorithm": "auto",
     "random_state": 42
   },
-  "rows": 32416,
+  "rows": 32401,
   "columns": 12,
-  "train_rows": 25932,
-  "test_rows": 6484,
-  "accuracy": 0.8905,
-  "precision": 0.8533,
-  "recall": 0.603,
-  "f1": 0.7066,
+  "train_rows": 25920,
+  "test_rows": 6481,
+  "accuracy": 0.8966,
+  "precision": 0.877,
+  "recall": 0.6135,
+  "f1": 0.722,
   "confusion_matrix": [
     [
-      4919,
-      147
+      4941,
+      122
     ],
     [
-      563,
-      855
+      548,
+      870
     ]
   ],
   "classification_report": {
-    "No default": {
-      "precision": 0.8973002553812477,
-      "recall": 0.9709830240821161,
-      "f1-score": 0.9326886613576033,
-      "support": 5066.0
+    "Bajo riesgo": {
+      "precision": 0.9001639642922208,
+      "recall": 0.9759036144578314,
+      "f1-score": 0.9365049279757391,
+      "support": 5063.0
     },
-    "Default": {
-      "precision": 0.8532934131736527,
-      "recall": 0.6029619181946403,
-      "f1-score": 0.7066115702479339,
+    "Alto riesgo": {
+      "precision": 0.8770161290322581,
+      "recall": 0.613540197461213,
+      "f1-score": 0.7219917012448133,
       "support": 1418.0
     },
-    "accuracy": 0.8904996915484269,
+    "accuracy": 0.8966208918376793,
     "macro avg": {
-      "precision": 0.8752968342774502,
-      "recall": 0.7869724711383782,
-      "f1-score": 0.8196501158027686,
-      "support": 6484.0
+      "precision": 0.8885900466622394,
+      "recall": 0.7947219059595222,
+      "f1-score": 0.8292483146102763,
+      "support": 6481.0
     },
     "weighted avg": {
-      "precision": 0.8876763037695311,
-      "recall": 0.8904996915484269,
-      "f1-score": 0.8832473727713123,
-      "support": 6484.0
+      "precision": 0.8950993708037734,
+      "recall": 0.8966208918376793,
+      "f1-score": 0.8895708505950182,
+      "support": 6481.0
     }
   },
   "class_names": {
@@ -95,7 +110,7 @@
       "label": "Edad",
       "type": "number",
       "min": 20.0,
-      "max": 144.0,
+      "max": 94.0,
       "median": 26.0
     },
     {
@@ -103,7 +118,7 @@
       "label": "Ingreso anual",
       "type": "number",
       "min": 4000.0,
-      "max": 6000000.0,
+      "max": 948000.0,
       "median": 55000.0
     },
     {
@@ -123,7 +138,7 @@
       "label": "A\u00f1os de empleo",
       "type": "number",
       "min": 0.0,
-      "max": 123.0,
+      "max": 41.0,
       "median": 4.0
     },
     {
@@ -173,11 +188,11 @@
     },
     {
       "name": "loan_percent_income",
-      "label": "Porcentaje ingreso/pr\u00e9stamo",
+      "label": "Porcentaje pr\u00e9stamo/ingreso",
       "type": "number",
-      "min": 0.0,
+      "min": 0.0013,
       "max": 0.83,
-      "median": 0.15
+      "median": 0.1481
     },
     {
       "name": "cb_person_default_on_file",

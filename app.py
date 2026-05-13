@@ -1,5 +1,4 @@
 from __future__ import annotations
-import json
 
 import json
 import subprocess
@@ -129,6 +128,11 @@ class CreditRiskApi:
     # ------------------------------------------------------------ shared logic
 
     def _do_predict(self, values: dict, model, metrics: dict) -> dict:
+        income = self._safe_float(values.get("person_income"))
+        loan_amount = self._safe_float(values.get("loan_amnt"))
+        if income and income > 0 and loan_amount is not None:
+            values["loan_percent_income"] = round(loan_amount / income, 4)
+
         row = {}
         for field in metrics["fields"]:
             name = field["name"]
@@ -159,16 +163,24 @@ class CreditRiskApi:
             "accuracy": round(float(metrics["accuracy"]) * 100, 2),
         }
 
+    @staticmethod
+    def _safe_float(value):
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return None
+
 
 def main() -> None:
     api = CreditRiskApi()
     webview.create_window(
-        "Clasificador de Riesgo Crediticio",
+        "Sistema de Predicción de Riesgo Crediticio",
         INDEX_PATH.as_uri(),
         js_api=api,
-        width=1180,
-        height=780,
+        width=1360,
+        height=860,
         min_size=(980, 680),
+        maximized=True,
     )
     webview.start(debug=False)
 

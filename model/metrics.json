@@ -3,56 +3,71 @@
   "source_url": "https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data",
   "target_column": "loan_status",
   "algorithm": "Random Forest Classifier",
+  "cleaning": {
+    "original_rows": 32581,
+    "clean_rows": 32401,
+    "removed_rows": 180,
+    "clean_dataset_path": "data\\credit_risk_dataset_clean.csv",
+    "rules": [
+      "Edad entre 20 y 100 a\u00f1os",
+      "Ingreso anual entre 4,000 y 1,000,000",
+      "A\u00f1os de empleo entre 0 y 60, permitiendo valores faltantes",
+      "Monto del pr\u00e9stamo entre 500 y 35,000",
+      "Tasa de inter\u00e9s entre 1% y 40%, permitiendo valores faltantes",
+      "Historial crediticio entre 0 y 60 a\u00f1os",
+      "loan_percent_income recalculado como loan_amnt / person_income"
+    ]
+  },
   "training_params": {
-    "train_percent": 80.0,
-    "test_percent": 20.0,
+    "train_percent": 75.0,
+    "test_percent": 25.0,
     "n_estimators": 90,
-    "max_depth": 16,
+    "max_depth": 8,
     "random_state": 123
   },
-  "rows": 32416,
+  "rows": 32401,
   "columns": 12,
-  "train_rows": 25932,
-  "test_rows": 6484,
-  "accuracy": 0.93,
-  "precision": 0.9327,
-  "recall": 0.7327,
-  "f1": 0.8207,
+  "train_rows": 24300,
+  "test_rows": 8101,
+  "accuracy": 0.8956,
+  "precision": 0.7607,
+  "recall": 0.7624,
+  "f1": 0.7616,
   "confusion_matrix": [
     [
-      4991,
-      75
+      5904,
+      425
     ],
     [
-      379,
-      1039
+      421,
+      1351
     ]
   ],
   "classification_report": {
-    "No default": {
-      "precision": 0.9294227188081937,
-      "recall": 0.9851954204500593,
-      "f1-score": 0.9564967420467612,
-      "support": 5066.0
+    "Bajo riesgo": {
+      "precision": 0.9334387351778656,
+      "recall": 0.932848791278243,
+      "f1-score": 0.9331436699857752,
+      "support": 6329.0
     },
-    "Default": {
-      "precision": 0.9326750448833034,
-      "recall": 0.732722143864598,
-      "f1-score": 0.8206951026856241,
-      "support": 1418.0
+    "Alto riesgo": {
+      "precision": 0.7606981981981982,
+      "recall": 0.7624153498871332,
+      "f1-score": 0.7615558060879368,
+      "support": 1772.0
     },
-    "accuracy": 0.9299814929056138,
+    "accuracy": 0.8955684483397112,
     "macro avg": {
-      "precision": 0.9310488818457485,
-      "recall": 0.8589587821573286,
-      "f1-score": 0.8885959223661926,
-      "support": 6484.0
+      "precision": 0.8470684666880319,
+      "recall": 0.8476320705826881,
+      "f1-score": 0.847349738036856,
+      "support": 8101.0
     },
     "weighted avg": {
-      "precision": 0.9301339770399187,
-      "recall": 0.9299814929056138,
-      "f1-score": 0.9267979874795045,
-      "support": 6484.0
+      "precision": 0.8956537417785357,
+      "recall": 0.8955684483397112,
+      "f1-score": 0.8956108104836188,
+      "support": 8101.0
     }
   },
   "class_names": {
@@ -93,7 +108,7 @@
       "label": "Edad",
       "type": "number",
       "min": 20.0,
-      "max": 144.0,
+      "max": 94.0,
       "median": 26.0
     },
     {
@@ -101,7 +116,7 @@
       "label": "Ingreso anual",
       "type": "number",
       "min": 4000.0,
-      "max": 6000000.0,
+      "max": 948000.0,
       "median": 55000.0
     },
     {
@@ -121,7 +136,7 @@
       "label": "A\u00f1os de empleo",
       "type": "number",
       "min": 0.0,
-      "max": 123.0,
+      "max": 41.0,
       "median": 4.0
     },
     {
@@ -171,11 +186,11 @@
     },
     {
       "name": "loan_percent_income",
-      "label": "Porcentaje ingreso/pr\u00e9stamo",
+      "label": "Porcentaje pr\u00e9stamo/ingreso",
       "type": "number",
-      "min": 0.0,
+      "min": 0.0013,
       "max": 0.83,
-      "median": 0.15
+      "median": 0.1481
     },
     {
       "name": "cb_person_default_on_file",
@@ -197,9 +212,9 @@
     }
   ],
   "charts": {
-    "confusion_matrix": "assets/confusion_matrix.png",
-    "class_distribution": "assets/class_distribution.png",
-    "feature_importance": "assets/feature_importance.png",
-    "model_metrics": "assets/model_metrics.png"
+    "confusion_matrix": "assets/rf_confusion_matrix.png",
+    "class_distribution": "assets/rf_class_distribution.png",
+    "feature_importance": "assets/rf_feature_importance.png",
+    "model_metrics": "assets/rf_model_metrics.png"
   }
 }

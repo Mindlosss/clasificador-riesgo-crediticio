@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clasificador de Riesgo Crediticio</title>
+    <title>Sistema de Predicción de Riesgo Crediticio</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -12,7 +12,7 @@
       <!-- ─── TOP BAR ─── -->
       <section class="topbar">
         <div>
-          <h1>Predicción de riesgo crediticio</h1>
+          <h1>Sistema de predicción de riesgo crediticio</h1>
         </div>
         <div class="topbar-right">
           <!-- Algorithm selector -->
@@ -62,6 +62,7 @@
                 <div><dt>Algoritmo</dt><dd id="rf-algorithm">--</dd></div>
                 <div><dt>Variable clase</dt><dd id="rf-target">--</dd></div>
                 <div><dt>Registros</dt><dd id="rf-rows">--</dd></div>
+                <div><dt>Outliers eliminados</dt><dd id="rf-removed-rows">--</dd></div>
                 <div><dt>Datos entrenamiento</dt><dd id="rf-train-rows">--</dd></div>
                 <div><dt>Datos prueba</dt><dd id="rf-test-rows">--</dd></div>
                 <div><dt>División train/test</dt><dd id="rf-split-info">--</dd></div>
@@ -160,6 +161,7 @@
                 <div><dt>Algoritmo</dt><dd id="knn-algorithm">--</dd></div>
                 <div><dt>Variable clase</dt><dd id="knn-target">--</dd></div>
                 <div><dt>Registros</dt><dd id="knn-rows">--</dd></div>
+                <div><dt>Outliers eliminados</dt><dd id="knn-removed-rows">--</dd></div>
                 <div><dt>Datos entrenamiento</dt><dd id="knn-train-rows">--</dd></div>
                 <div><dt>Datos prueba</dt><dd id="knn-test-rows">--</dd></div>
                 <div><dt>División train/test</dt><dd id="knn-split-info">--</dd></div>
@@ -315,6 +317,17 @@
       <!-- /prediction-view -->
 
     </main>
+
+    <div id="chart-modal" class="chart-modal hidden" role="dialog" aria-modal="true" aria-labelledby="chart-modal-title">
+      <div class="chart-modal-backdrop" data-close-chart-modal></div>
+      <section class="chart-modal-content">
+        <div class="chart-modal-header">
+          <h2 id="chart-modal-title">Gráfica</h2>
+          <button id="chart-modal-close" class="chart-modal-close" type="button" aria-label="Cerrar gráfica">×</button>
+        </div>
+        <img id="chart-modal-image" alt="Gráfica ampliada" />
+      </section>
+    </div>
 
     <script src="script.js"></script>
   </body>

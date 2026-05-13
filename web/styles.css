@@ -571,6 +571,85 @@ select:focus {
   border-radius: 8px;
   background: #fbfdfd;
   object-fit: contain;
+  cursor: zoom-in;
+}
+
+.chart-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+}
+
+.chart-modal.hidden {
+  display: none;
+}
+
+.chart-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 18, 22, 0.74);
+}
+
+.chart-modal-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(1180px, 96vw);
+  max-height: 92vh;
+  border: 1px solid rgba(216, 224, 230, 0.85);
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  overflow: hidden;
+}
+
+.chart-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.chart-modal-header h2 {
+  margin: 0;
+}
+
+.chart-modal-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 8px;
+  background: #eef2f5;
+  color: var(--ink);
+  box-shadow: none;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.chart-modal-close:hover {
+  background: #dfe8ee;
+  color: var(--ink);
+  transform: none;
+  box-shadow: none;
+}
+
+.chart-modal-content img {
+  display: block;
+  width: 100%;
+  max-height: calc(92vh - 70px);
+  padding: 18px;
+  object-fit: contain;
+  background: #fbfdfd;
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
@@ -656,4 +735,10 @@ select:focus {
   .algo-selector {
     flex-direction: column;
   }
+}
+
+input[readonly] {
+  background: #eef4f6;
+  color: #50616c;
+  cursor: not-allowed;
 }

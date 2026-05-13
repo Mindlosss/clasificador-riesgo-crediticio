@@ -63,6 +63,19 @@ Remove-Item -Recurse -Force .venv
 ```
 
 El primer entrenamiento descarga el CSV, entrena el modelo, genera `model/metrics.json` y guarda las gráficas en `web/assets`.
+Durante el entrenamiento también se genera `data/credit_risk_dataset_clean.csv`, que es la versión sin outliers usada por el modelo.
+
+Reglas aplicadas para limpiar outliers:
+
+- edad entre 20 y 100 años
+- ingreso anual entre 4,000 y 1,000,000
+- años de empleo entre 0 y 60, permitiendo valores faltantes
+- monto del préstamo entre 500 y 35,000
+- tasa de interés entre 1% y 40%, permitiendo valores faltantes
+- historial crediticio entre 0 y 60 años
+- `loan_percent_income` se recalcula como `loan_amnt / person_income`
+
+En la pantalla de predicción, `loan_percent_income` es un campo calculado automáticamente con el ingreso anual y el monto del préstamo, para mantener coherencia en los datos capturados.
 
 La interfaz tiene dos vistas:
 

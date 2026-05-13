@@ -32,6 +32,7 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_PATH = BASE_DIR / "data" / "credit_risk_dataset.csv"
+CLEAN_DATA_PATH = BASE_DIR / "data" / "credit_risk_dataset_clean.csv"
 MODEL_PATH = BASE_DIR / "model" / "credit_risk_model.joblib"
 METRICS_PATH = BASE_DIR / "model" / "metrics.json"
 KNN_MODEL_PATH = BASE_DIR / "model" / "credit_risk_knn_model.joblib"
@@ -47,6 +48,7 @@ CLASS_NAMES = {
     0: "Bajo riesgo: no incumple el préstamo",
     1: "Alto riesgo: posible incumplimiento",
 }
+SHORT_CLASS_NAMES = ["Bajo riesgo", "Alto riesgo"]
 FIELD_LABELS = {
     "person_age": "Edad",
     "person_income": "Ingreso anual",
@@ -56,7 +58,7 @@ FIELD_LABELS = {
     "loan_grade": "Grado del préstamo",
     "loan_amnt": "Monto del préstamo",
     "loan_int_rate": "Tasa de interés",
-    "loan_percent_income": "Porcentaje ingreso/préstamo",
+    "loan_percent_income": "Porcentaje préstamo/ingreso",
     "cb_person_default_on_file": "Incumplimiento previo",
     "cb_person_cred_hist_length": "Años de historial crediticio",
 }
@@ -76,6 +78,56 @@ def load_dataset() -> pd.DataFrame:
     if TARGET_COLUMN not in df.columns:
         raise ValueError(f"No existe la columna objetivo: {TARGET_COLUMN}")
     return df
+
+
+def clean_dataset(df: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+    """Remove implausible rows and keep loan_percent_income coherent."""
+    original_rows = len(df)
+    cleaned = df.copy()
+
+    numeric_columns = [
+        "person_age",
+        "person_income",
+        "person_emp_length",
+        "loan_amnt",
+        "loan_int_rate",
+        "loan_percent_income",
+        "cb_person_cred_hist_length",
+    ]
+    for column in numeric_columns:
+        if column in cleaned.columns:
+            cleaned[column] = pd.to_numeric(cleaned[column], errors="coerce")
+
+    cleaned = cleaned.drop_duplicates()
+    cleaned = cleaned[
+        (cleaned["person_age"].between(20, 100))
+        & (cleaned["person_income"].between(4_000, 1_000_000))
+        & (cleaned["person_emp_length"].isna() | cleaned["person_emp_length"].between(0, 60))
+        & (cleaned["loan_amnt"].between(500, 35_000))
+        & (cleaned["loan_int_rate"].isna() | cleaned["loan_int_rate"].between(1, 40))
+        & (cleaned["cb_person_cred_hist_length"].between(0, 60))
+    ].copy()
+
+    cleaned["loan_percent_income"] = (cleaned["loan_amnt"] / cleaned["person_income"]).round(4)
+    cleaned = cleaned[cleaned["loan_percent_income"].between(0, 1)].copy()
+    cleaned.to_csv(CLEAN_DATA_PATH, index=False)
+
+    report = {
+        "original_rows": int(original_rows),
+        "clean_rows": int(len(cleaned)),
+        "removed_rows": int(original_rows - len(cleaned)),
+        "clean_dataset_path": str(CLEAN_DATA_PATH.relative_to(BASE_DIR)),
+        "rules": [
+            "Edad entre 20 y 100 años",
+            "Ingreso anual entre 4,000 y 1,000,000",
+            "Años de empleo entre 0 y 60, permitiendo valores faltantes",
+            "Monto del préstamo entre 500 y 35,000",
+            "Tasa de interés entre 1% y 40%, permitiendo valores faltantes",
+            "Historial crediticio entre 0 y 60 años",
+            "loan_percent_income recalculado como loan_amnt / person_income",
+        ],
+    }
+    return cleaned, report
 
 
 def build_rf_pipeline(
@@ -202,8 +254,8 @@ def save_charts(
         annot=True,
         fmt="d",
         cmap="Blues",
-        xticklabels=["No default", "Default"],
-        yticklabels=["No default", "Default"],
+        xticklabels=SHORT_CLASS_NAMES,
+        yticklabels=SHORT_CLASS_NAMES,
     )
     plt.title("Matriz de confusión")
     plt.xlabel("Predicción")
@@ -247,11 +299,11 @@ def save_charts(
         # For KNN: show per-class metrics as a horizontal bar chart
         report = classification_report(
             y_test, y_pred,
-            target_names=["No default", "Default"],
+            target_names=SHORT_CLASS_NAMES,
             zero_division=0,
             output_dict=True,
         )
-        classes = ["No default", "Default"]
+        classes = SHORT_CLASS_NAMES
         precisions = [report[c]["precision"] for c in classes]
         recalls = [report[c]["recall"] for c in classes]
         f1s = [report[c]["f1-score"] for c in classes]
@@ -357,8 +409,8 @@ def train(
     random_state: int = 42,
 ) -> dict:
     params = normalize_rf_params(test_size, n_estimators, max_depth, random_state)
-    df = load_dataset()
-    df = df.drop_duplicates()
+    raw_df = load_dataset()
+    df, cleaning_report = clean_dataset(raw_df)
 
     feature_columns = [column for column in df.columns if column != TARGET_COLUMN]
     X = df[feature_columns]
@@ -392,6 +444,7 @@ def train(
         "source_url": "https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data",
         "target_column": TARGET_COLUMN,
         "algorithm": "Random Forest Classifier",
+        "cleaning": cleaning_report,
         "training_params": {
             "train_percent": round(params["train_size"] * 100, 2),
             "test_percent": round(params["test_size"] * 100, 2),
@@ -411,7 +464,7 @@ def train(
         "classification_report": classification_report(
             y_test,
             y_pred,
-            target_names=["No default", "Default"],
+            target_names=SHORT_CLASS_NAMES,
             zero_division=0,
             output_dict=True,
         ),
@@ -441,8 +494,8 @@ def train_knn(
     random_state: int = 42,
 ) -> dict:
     params = normalize_knn_params(test_size, n_neighbors, metric, weights, algorithm, random_state)
-    df = load_dataset()
-    df = df.drop_duplicates()
+    raw_df = load_dataset()
+    df, cleaning_report = clean_dataset(raw_df)
 
     feature_columns = [column for column in df.columns if column != TARGET_COLUMN]
     X = df[feature_columns]
@@ -477,6 +530,7 @@ def train_knn(
         "source_url": "https://www.kaggle.com/datasets/laotse/credit-risk-dataset/data",
         "target_column": TARGET_COLUMN,
         "algorithm": "K-Nearest Neighbors Classifier",
+        "cleaning": cleaning_report,
         "training_params": {
             "train_percent": round(params["train_size"] * 100, 2),
             "test_percent": round(params["test_size"] * 100, 2),
@@ -498,7 +552,7 @@ def train_knn(
         "classification_report": classification_report(
             y_test,
             y_pred,
-            target_names=["No default", "Default"],
+            target_names=SHORT_CLASS_NAMES,
             zero_division=0,
             output_dict=True,
         ),
